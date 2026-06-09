@@ -829,7 +829,8 @@ const products = [
 
 // ──── STATE ────
 let cart = {};
-let orderCounter = parseInt(localStorage.getItem('aph_order') || '4000');
+let orderCounter = 4000;
+try { orderCounter = parseInt(localStorage.getItem('aph_order') || '4000'); } catch(e) {}
 
 // ──── RENDER ────
 function renderProducts() {
@@ -962,7 +963,7 @@ async function submitOrder() {
   btn.textContent = 'Обробляємо...';
 
   const num = ++orderCounter;
-  localStorage.setItem('aph_order', orderCounter);
+  try { localStorage.setItem('aph_order', orderCounter); } catch(e) {}
 
   const name   = document.getElementById('f-name').value.trim();
   const phone  = document.getElementById('f-phone').value.trim();
@@ -971,7 +972,7 @@ async function submitOrder() {
   const addr   = `${city}, ${branch}`;
   const date   = new Date().toLocaleDateString('uk-UA');
 
-  const SHEET_URL = https://script.google.com/macros/s/AKfycbzHJylGbfDpESDjt4mX49MskiUJgiP5UAUAPhBkHxSHUxR-EkUCvrSZ7s2qPBJpmHtXxQ/exec;
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzHJylGbfDpESDjt4mX49MskiUJgiP5UAUAPhBkHxSHUxR-EkUCvrSZ7s2qPBJpmHtXxQ/exec';
 
   try {
     if (SHEET_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
