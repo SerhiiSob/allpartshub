@@ -971,10 +971,10 @@ async function submitOrder() {
   const addr   = `${city}, ${branch}`;
   const date   = new Date().toLocaleDateString('uk-UA');
 
-  const SHEET_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+  const SHEET_URL = https://script.google.com/macros/s/AKfycbyY5e_koMdEJQ0UqPjmmxzzhbbG755DfIRvMgUo6q7mN9HdqzXpDNz8hCSewaTaTKBFYg/exec;
 
   try {
-    if (SHEET_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+    if (SHEET_URL https://script.google.com/macros/s/AKfycbyY5e_koMdEJQ0UqPjmmxzzhbbG755DfIRvMgUo6q7mN9HdqzXpDNz8hCSewaTaTKBFYg/exec) {
       for (const [id, qty] of Object.entries(cart)) {
         const p = products.find(x => x.id === id);
         await fetch(SHEET_URL, {
