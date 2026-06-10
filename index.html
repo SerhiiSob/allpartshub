@@ -892,8 +892,7 @@ const products = [
 
 // ──── STATE ────
 let cart = {};
-let orderCounter = 4000;
-try { orderCounter = parseInt(localStorage.getItem('aph_order') || '4000'); } catch(e) {}
+// Номер замовлення тепер береться з Google Sheets (єдиний лічильник)
 
 // ──── RENDER ────
 function renderProducts() {
@@ -1248,8 +1247,16 @@ async function submitOrder() {
   btn.disabled = true;
   btn.textContent = 'Відправляємо...';
 
-  const num = ++orderCounter;
-  try { localStorage.setItem('aph_order', orderCounter); } catch(e) {}
+  // Отримуємо наступний номер замовлення з таблиці (єдиний лічильник для всіх)
+  let num;
+  try {
+    const r = await fetch(SHEET_URL + '?action=nextOrder');
+    const d = await r.json();
+    num = d.nextOrder;
+  } catch(e) {
+    // fallback: якщо не вдалось отримати — генеруємо timestamp-based номер
+    num = Date.now() % 100000;
+  }
 
   const name   = document.getElementById('f-name').value.trim();
   const phone  = document.getElementById('f-phone').value.trim();
