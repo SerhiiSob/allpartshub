@@ -518,6 +518,62 @@
 
   .field-err { font-size: 0.72rem; color: var(--error); display: none; }
   .field.has-err .field-err { display: block; }
+  .field.is-ok input { border-color: var(--success); }
+
+  /* ──── AUTOCOMPLETE DROPDOWN ──── */
+  .ac-wrap { position: relative; }
+
+  .ac-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(30,42,58,0.12);
+    z-index: 500;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  .ac-dropdown.open { display: block; }
+  .ac-dropdown::-webkit-scrollbar { width: 4px; }
+  .ac-dropdown::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .ac-item {
+    padding: 9px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.3;
+  }
+
+  .ac-item:last-child { border-bottom: none; }
+  .ac-item:hover, .ac-item.focused { background: var(--accent-light); color: var(--accent); }
+
+  .ac-item-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .ac-loader {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .ac-empty {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .field-hint { font-size: 0.7rem; color: var(--muted); }
 
   /* Drawer footer */
   .drawer-foot {
@@ -757,29 +813,36 @@
         <div class="form-legend">Дані отримувача</div>
 
         <div class="field" id="fg-name">
-          <label>ПІБ *</label>
-          <input type="text" id="f-name" placeholder="Шевченко Микола Іванович">
-          <span class="field-err">Введіть повне ПІБ</span>
+          <label>ПІБ (Прізвище Ім'я По-батькові) *</label>
+          <input type="text" id="f-name" placeholder="Шевченко Микола Іванович" autocomplete="off">
+          <span class="field-err" id="err-name">Введіть ПІБ кирилицею, мінімум 2 слова</span>
         </div>
 
         <div class="field" id="fg-phone">
           <label>Номер телефону *</label>
-          <input type="tel" id="f-phone" placeholder="+380 67 123 45 67">
-          <span class="field-err">Введіть коректний номер</span>
+          <input type="tel" id="f-phone" placeholder="+380671234567" autocomplete="off" maxlength="13">
+          <span class="field-hint">Формат: +380XXXXXXXXX (10 цифр після +380)</span>
+          <span class="field-err" id="err-phone">Введіть коректний номер: +380XXXXXXXXX</span>
         </div>
 
         <div class="form-legend">Доставка — Нова Пошта</div>
 
         <div class="field" id="fg-city">
           <label>Місто *</label>
-          <input type="text" id="f-city" placeholder="Харків">
-          <span class="field-err">Введіть місто</span>
+          <div class="ac-wrap">
+            <input type="text" id="f-city" placeholder="Почніть вводити місто..." autocomplete="off">
+            <div class="ac-dropdown" id="city-dropdown"></div>
+          </div>
+          <span class="field-err" id="err-city">Виберіть місто зі списку</span>
         </div>
 
         <div class="field" id="fg-branch">
-          <label>Номер відділення НП *</label>
-          <input type="text" id="f-branch" placeholder="Відділення №5">
-          <span class="field-err">Введіть відділення</span>
+          <label>Відділення Нової Пошти *</label>
+          <div class="ac-wrap">
+            <input type="text" id="f-branch" placeholder="Спочатку виберіть місто..." autocomplete="off" disabled>
+            <div class="ac-dropdown" id="branch-dropdown"></div>
+          </div>
+          <span class="field-err" id="err-branch">Виберіть відділення зі списку</span>
         </div>
       </div>
     </div>
@@ -935,23 +998,246 @@ function updateCart() {
 function openCart()  { document.getElementById('drawerOverlay').classList.add('open'); document.getElementById('cartDrawer').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeCart() { document.getElementById('drawerOverlay').classList.remove('open'); document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow=''; }
 
+// ──── NOVA POSHTA API ────
+const NP_KEY = '6b85037bfd322cbb47c4624a0072ef92';
+const NP_URL = 'https://api.novaposhta.ua/v2.0/json/';
+
+let selectedCityRef = '';
+let selectedCityName = '';
+let selectedBranchText = '';
+let citySearchTimer = null;
+let branchSearchTimer = null;
+
+async function npRequest(modelName, calledMethod, props) {
+  const body = {
+    apiKey: NP_KEY,
+    modelName,
+    calledMethod,
+    methodProperties: props
+  };
+  const r = await fetch(NP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const d = await r.json();
+  return d.data || [];
+}
+
+// ── City autocomplete ──
+function initCitySearch() {
+  const input = document.getElementById('f-city');
+  const drop  = document.getElementById('city-dropdown');
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    selectedCityRef  = '';
+    selectedCityName = '';
+    selectedBranchText = '';
+    resetField('fg-city');
+    document.getElementById('f-branch').value = '';
+    document.getElementById('f-branch').disabled = true;
+    selectedBranchText = '';
+
+    if (q.length < 2) { closeDrop(drop); return; }
+    clearTimeout(citySearchTimer);
+    showLoader(drop);
+    citySearchTimer = setTimeout(() => searchCity(q, drop, input), 350);
+  });
+
+  input.addEventListener('keydown', e => handleDropKey(e, drop, chooseCityItem));
+  document.addEventListener('click', e => { if (!e.target.closest('#fg-city')) closeDrop(drop); });
+}
+
+async function searchCity(q, drop, input) {
+  try {
+    const data = await npRequest('Address', 'searchSettlements', {
+      CityName: q, Limit: 8, Page: 1
+    });
+    const cities = (data[0] && data[0].Addresses) ? data[0].Addresses : [];
+    if (!cities.length) { showEmpty(drop, 'Місто не знайдено'); return; }
+
+    drop.innerHTML = cities.map((c, i) => `
+      <div class="ac-item" data-ref="${c.DeliveryCity}" data-name="${c.Present}" tabindex="-1">
+        ${c.Present}
+      </div>`).join('');
+
+    drop.querySelectorAll('.ac-item').forEach(el => {
+      el.addEventListener('click', () => chooseCityItem(el, input, drop));
+    });
+    drop.classList.add('open');
+  } catch(e) {
+    showEmpty(drop, 'Помилка з\'єднання з НП');
+  }
+}
+
+function chooseCityItem(el, input, drop) {
+  selectedCityRef  = el.dataset.ref;
+  selectedCityName = el.dataset.name;
+  input.value = selectedCityName;
+  closeDrop(drop);
+  setFieldOk('fg-city');
+
+  const branchInput = document.getElementById('f-branch');
+  branchInput.disabled = false;
+  branchInput.placeholder = 'Почніть вводити номер або адресу...';
+  branchInput.focus();
+}
+
+// ── Branch autocomplete ──
+function initBranchSearch() {
+  const input = document.getElementById('f-branch');
+  const drop  = document.getElementById('branch-dropdown');
+
+  input.addEventListener('input', () => {
+    if (!selectedCityRef) return;
+    const q = input.value.trim();
+    selectedBranchText = '';
+    resetField('fg-branch');
+
+    clearTimeout(branchSearchTimer);
+    if (q.length < 1) { closeDrop(drop); return; }
+    showLoader(drop);
+    branchSearchTimer = setTimeout(() => searchBranch(q, drop, input), 400);
+  });
+
+  input.addEventListener('keydown', e => handleDropKey(e, drop, chooseBranchItem));
+  document.addEventListener('click', e => { if (!e.target.closest('#fg-branch')) closeDrop(drop); });
+}
+
+async function searchBranch(q, drop, input) {
+  try {
+    const data = await npRequest('AddressGeneral', 'getWarehouses', {
+      CityRef: selectedCityRef,
+      FindByString: q,
+      Limit: 10,
+      Page: 1
+    });
+    if (!data.length) { showEmpty(drop, 'Відділення не знайдено'); return; }
+
+    drop.innerHTML = data.map(w => `
+      <div class="ac-item" data-desc="${w.Description}" tabindex="-1">
+        ${w.Description}
+        <div class="ac-item-sub">${w.ShortAddress || ''}</div>
+      </div>`).join('');
+
+    drop.querySelectorAll('.ac-item').forEach(el => {
+      el.addEventListener('click', () => chooseBranchItem(el, input, drop));
+    });
+    drop.classList.add('open');
+  } catch(e) {
+    showEmpty(drop, 'Помилка з\'єднання з НП');
+  }
+}
+
+function chooseBranchItem(el, input, drop) {
+  selectedBranchText = el.dataset.desc;
+  input.value = selectedBranchText;
+  closeDrop(drop);
+  setFieldOk('fg-branch');
+}
+
+// ── Dropdown helpers ──
+function showLoader(drop) {
+  drop.innerHTML = '<div class="ac-loader">Пошук...</div>';
+  drop.classList.add('open');
+}
+
+function showEmpty(drop, msg) {
+  drop.innerHTML = `<div class="ac-empty">${msg}</div>`;
+  drop.classList.add('open');
+}
+
+function closeDrop(drop) { drop.classList.remove('open'); }
+
+function handleDropKey(e, drop, chooseFn) {
+  const items = drop.querySelectorAll('.ac-item');
+  if (!items.length) return;
+  const focused = drop.querySelector('.ac-item.focused');
+  let idx = Array.from(items).indexOf(focused);
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (focused) focused.classList.remove('focused');
+    idx = (idx + 1) % items.length;
+    items[idx].classList.add('focused');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (focused) focused.classList.remove('focused');
+    idx = (idx - 1 + items.length) % items.length;
+    items[idx].classList.add('focused');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter' && focused) {
+    e.preventDefault();
+    chooseFn(focused, e.target, drop);
+  } else if (e.key === 'Escape') {
+    closeDrop(drop);
+  }
+}
+
+function setFieldOk(fgId) {
+  const fg = document.getElementById(fgId);
+  fg.classList.remove('has-err');
+  fg.classList.add('is-ok');
+}
+
+function resetField(fgId) {
+  const fg = document.getElementById(fgId);
+  fg.classList.remove('has-err', 'is-ok');
+  const inp = fg.querySelector('input');
+  if (inp) inp.classList.remove('err');
+}
+
+// ── Phone auto-format ──
+function initPhoneFormat() {
+  const input = document.getElementById('f-phone');
+  input.addEventListener('input', () => {
+    let v = input.value.replace(/[^\d+]/g, '');
+    // Автоматично ставимо +380 якщо починається з 0
+    if (v.startsWith('0') && v.length > 1) v = '+38' + v;
+    if (!v.startsWith('+')) v = '+' + v;
+    input.value = v.slice(0, 13); // +380XXXXXXXXX = 13 символів
+  });
+}
+
 // ──── VALIDATE ────
 function validate() {
   let ok = true;
-  const rules = [
-    { el:'f-name',   fg:'fg-name',   test: v => v.trim().split(/\s+/).length >= 2 },
-    { el:'f-phone',  fg:'fg-phone',  test: v => /^\+?[\d\s\-()]{10,15}$/.test(v.trim()) },
-    { el:'f-city',   fg:'fg-city',   test: v => v.trim().length >= 2 },
-    { el:'f-branch', fg:'fg-branch', test: v => v.trim().length >= 1 },
-  ];
-  rules.forEach(r => {
-    const v = document.getElementById(r.el).value;
-    const pass = r.test(v);
-    document.getElementById(r.fg).classList.toggle('has-err', !pass);
-    document.getElementById(r.el).classList.toggle('err', !pass);
-    if (!pass) ok = false;
-  });
+
+  // ПІБ: тільки кирилиця, мінімум 2 слова, кожне мін. 2 літери
+  const nameVal = document.getElementById('f-name').value.trim();
+  const nameOk = /^[А-ЯҐЄІЇа-яґєії'\-]+(\s+[А-ЯҐЄІЇа-яґєії'\-]+){1,}$/.test(nameVal)
+    && nameVal.split(/\s+/).every(w => w.replace(/[^А-ЯҐЄІЇа-яґєії]/gi,'').length >= 2)
+    && nameVal.split(/\s+/).length >= 2;
+  toggleFieldErr('fg-name', 'f-name', nameOk);
+  if (!nameOk) ok = false;
+
+  // Телефон: строго +380XXXXXXXXX
+  const phoneVal = document.getElementById('f-phone').value.trim();
+  const phoneOk = /^\+380\d{9}$/.test(phoneVal);
+  toggleFieldErr('fg-phone', 'f-phone', phoneOk);
+  if (!phoneOk) ok = false;
+
+  // Місто: обов'язково обрати зі списку НП
+  const cityOk = !!selectedCityRef && !!selectedCityName;
+  toggleFieldErr('fg-city', 'f-city', cityOk);
+  if (!cityOk) ok = false;
+
+  // Відділення: обов'язково обрати зі списку НП
+  const branchOk = !!selectedBranchText;
+  toggleFieldErr('fg-branch', 'f-branch', branchOk);
+  if (!branchOk) ok = false;
+
   return ok;
+}
+
+function toggleFieldErr(fgId, inputId, isOk) {
+  const fg  = document.getElementById(fgId);
+  const inp = document.getElementById(inputId);
+  fg.classList.toggle('has-err', !isOk);
+  fg.classList.toggle('is-ok',    isOk);
+  if (inp) inp.classList.toggle('err', !isOk);
 }
 
 // ──── SUBMIT ────
@@ -967,9 +1253,7 @@ async function submitOrder() {
 
   const name   = document.getElementById('f-name').value.trim();
   const phone  = document.getElementById('f-phone').value.trim();
-  const city   = document.getElementById('f-city').value.trim();
-  const branch = document.getElementById('f-branch').value.trim();
-  const addr   = `${city}, ${branch}`;
+  const addr   = `${selectedCityName}, ${selectedBranchText}`;
   const date   = new Date().toLocaleDateString('uk-UA');
 
   const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzHJylGbfDpESDjt4mX49MskiUJgiP5UAUAPhBkHxSHUxR-EkUCvrSZ7s2qPBJpmHtXxQ/exec';
@@ -1011,12 +1295,16 @@ async function submitOrder() {
   cart = {};
   updateCart();
   ['f-name','f-phone','f-city','f-branch'].forEach(fid => {
-    document.getElementById(fid).value = '';
-    document.getElementById(fid).classList.remove('err');
+    const el = document.getElementById(fid);
+    if (el) { el.value = ''; el.classList.remove('err'); }
   });
-  ['fg-name','fg-phone','fg-city','fg-branch'].forEach(fid =>
-    document.getElementById(fid).classList.remove('has-err')
-  );
+  ['fg-name','fg-phone','fg-city','fg-branch'].forEach(fid => {
+    const el = document.getElementById(fid);
+    if (el) { el.classList.remove('has-err','is-ok'); }
+  });
+  selectedCityRef = ''; selectedCityName = ''; selectedBranchText = '';
+  document.getElementById('f-branch').disabled = true;
+  document.getElementById('f-branch').placeholder = 'Спочатку виберіть місто...';
   closeCart();
 
   document.getElementById('modalOrderNum').textContent = `Замовлення #${num}`;
@@ -1043,6 +1331,9 @@ function showToast(msg, type='') {
 // ──── INIT ────
 renderProducts();
 updateCart();
+initCitySearch();
+initBranchSearch();
+initPhoneFormat();
 </script>
 </body>
 </html>
