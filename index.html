@@ -707,6 +707,115 @@
     background: var(--surface);
   }
 
+  /* ──── FILTERS & SEARCH ──── */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px 9px 34px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .price-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 10px;
+  }
+
+  .price-filter input {
+    width: 72px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    outline: none;
+    text-align: center;
+  }
+
+  .price-filter input::placeholder { color: var(--muted); }
+  .price-filter span { font-size: 0.75rem; color: var(--muted); }
+
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .no-results-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.4; }
+
   /* ──── RESPONSIVE ──── */
   @media (max-width: 600px) {
     header { padding: 0 16px; }
@@ -716,6 +825,8 @@
     .drawer { width: 100vw; }
     .modal { padding: 28px 20px; }
     .site-footer { padding: 20px 16px; }
+    .toolbar { gap: 8px; }
+    .price-filter { width: 100%; }
   }
 </style>
 </head>
@@ -770,6 +881,39 @@
   <div class="catalog-header">
     <div class="catalog-title">Каталог товарів <span class="catalog-count" id="productCountLabel"></span></div>
   </div>
+
+  <!-- TOOLBAR: пошук + фільтри -->
+  <div class="toolbar">
+
+    <!-- Рядок пошуку -->
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="search-input" id="searchInput" placeholder="Пошук за назвою або артикулом..." oninput="applyFilters()">
+    </div>
+
+    <!-- Фільтр за категорією -->
+    <div class="filter-group">
+      <span class="filter-label">Категорія:</span>
+      <div id="catFilters">
+        <!-- Кнопки генеруються автоматично з масиву products -->
+      </div>
+    </div>
+
+    <!-- Фільтр за ціною -->
+    <div class="filter-group">
+      <span class="filter-label">Ціна:</span>
+      <div class="price-filter">
+        <input type="number" id="priceMin" placeholder="від" oninput="applyFilters()" min="0">
+        <span>—</span>
+        <input type="number" id="priceMax" placeholder="до" oninput="applyFilters()" min="0">
+        <span>₴</span>
+      </div>
+    </div>
+
+  </div>
+
   <div class="products-grid" id="productsGrid"></div>
 </main>
 
@@ -844,6 +988,13 @@
           </div>
           <span class="field-err" id="err-branch">Виберіть відділення зі списку</span>
         </div>
+
+        <div class="field" id="fg-tg">
+          <label>Telegram (необов'язково)</label>
+          <input type="text" id="f-tg" placeholder="@username" autocomplete="off">
+          <span class="field-hint">Для зручного зв'язку щодо замовлення</span>
+          <span class="field-err" id="err-tg">Нікнейм має починатись з @</span>
+        </div>
       </div>
     </div>
   </div>
@@ -874,35 +1025,221 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ──── PRODUCTS ────
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║              МАСИВ ТОВАРІВ — ТУТ КЕРУЄШ КАТАЛОГОМ              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+//
+// Кожен товар — один об'єкт { } у масиві нижче.
+//
+// ПОЛЯ ТОВАРУ:
+//   id    — артикул, УНІКАЛЬНИЙ. Формат: "APH-XXX"
+//           Відображається синім тегом на картці.
+//           Потрапляє до таблиці замовлень.
+//
+//   cat   — категорія (тег у кутку картки + кнопка фільтру)
+//           Кнопки фільтрів створюються АВТОМАТИЧНО з цього поля.
+//           ► Щоб додати нову категорію — просто напиши нову назву.
+//
+//   emoji — іконка на картці (поки немає фото)
+//           Приклади: 🔧 ⚙️ 🛢️ 🔗 🪚 ⚡ 🧰 🔲 🧵 🔩
+//           ► Якщо є фото — додай поле img (дивись нижче)
+//
+//   img   — (необов'язково) URL або шлях до фото товару.
+//           Якщо img вказано — emoji ігнорується, показується фото.
+//           Приклад: img: "https://example.com/photo.jpg"
+//                    img: "images/blade_255.jpg"   ← локальний файл
+//
+//   name  — назва товару
+//
+//   price — ціна в гривнях, ЧИСЛО без лапок. Приклад: price: 280
+//
+//   desc  — короткий опис (2-3 речення): характеристики, сумісність
+//
+// ─────────────────────────────────────────────────────────────────
+// ЯК ЗМІНИТИ ТОВАР:
+//   Знайди рядок і відредагуй потрібне поле.
+//   Наприклад: price: 280 → price: 320
+//
+// ЯК ДОДАТИ НОВИЙ ТОВАР:
+//   1. Скопіюй будь-який блок { ... },
+//   2. Встав перед рядком "ДОДАЙ НОВІ ТОВАРИ ПІСЛЯ ЦЬОГО РЯДКА"
+//   3. Змінити усі поля, особливо id (унікальний!)
+//   Приклад:
+//   { id:"APH-013", cat:"Витратники", emoji:"🔩",
+//     name:"Болт кріплення леза М10×1.25",
+//     price:35,
+//     desc:"Болт для кріплення різального диска. Різьба М10×1.25. Сталь." },
+//
+// ЯК ВИДАЛИТИ ТОВАР:
+//   Видали весь блок від { до }, (включно з комою).
+//
+// ─────────────────────────────────────────────────────────────────
+
 const products = [
-  { id:"APH-001", cat:"Леза / Диски",    emoji:"🪚", name:"Тристороннє лезо 255×25.4мм",       price:280,  desc:"Для бензокос і мотокос. Загартована сталь, 3 ріжучі краї. Ресурс до 80 год. роботи." },
-  { id:"APH-002", cat:"Леза / Диски",    emoji:"⚙️", name:"Диск металевий 8-зубий 305мм",       price:420,  desc:"Для жорсткого чагарнику та молодих дерев. Діаметр 305 мм, посадка 25.4 мм." },
-  { id:"APH-003", cat:"Ланцюги",         emoji:"🔗", name:"Ланцюг пиляльний 3/8\" 1.3мм 52зв.",  price:390,  desc:"Стандартний ланцюг для шини 35–40 см. Сумісний з STIHL MS 180, Husqvarna 236." },
-  { id:"APH-004", cat:"Ланцюги",         emoji:"🔗", name:"Ланцюг напівзрізний 3/8\" 1.5мм 56зв.",price:460, desc:"Для брудної та обмерзлої деревини. Знижений відскік, підвищена безпека." },
-  { id:"APH-005", cat:"Фільтри",         emoji:"🔲", name:"Повітряний фільтр STIHL MS 180/181",  price:95,   desc:"Оригінальний аналог. Замінник арт. 1130 120 1601. Встановлення без інструментів." },
-  { id:"APH-006", cat:"Фільтри",         emoji:"🔲", name:"Паливний фільтр універсальний 5мм",   price:45,   desc:"Підходить до більшості бензокос і пил з паливопроводом 5 мм. Пластиковий корпус." },
-  { id:"APH-007", cat:"Масло",           emoji:"🛢️", name:"Масло для ланцюга Oregon 1L",         price:195,  desc:"Мінеральне ланцюгове масло. Знижений розкид, захист від зносу. Універсальне 1 л." },
-  { id:"APH-008", cat:"Масло",           emoji:"🛢️", name:"Масло 2-тактне STIHL HP 100мл",       price:120,  desc:"Оригінальне масло для 2-такт. двигунів. Співвідношення 1:50. Захист від нагару." },
-  { id:"APH-009", cat:"Карбюратори",     emoji:"🔧", name:"Карбюратор Walbro WYL для кос",       price:850,  desc:"Замінник для більшості мотокос 25–52 cc. Комплект прокладок у комплекті." },
-  { id:"APH-010", cat:"Запалювання",     emoji:"⚡", name:"Свічка NGK BPMR7A (Champion RCJ6Y)",  price:75,   desc:"Стандартна свічка для 2-тактних двигунів. Різьба M14×1.25, зазор 0.5 мм." },
-  { id:"APH-011", cat:"Витратники",      emoji:"🧵", name:"Волосінь кругла 2.4мм × 15м",         price:65,   desc:"Для головок типу AutoCut. Матеріал: нейлон армований. Для важких умов роботи." },
-  { id:"APH-012", cat:"Витратники",      emoji:"🧰", name:"Комплект ущільнювачів картера",        price:220,  desc:"Набір гумових кільць і прокладок для ТО двигуна бензокоси 26–43 cc. 12 шт." },
-];
+
+  // ── ЛЕЗА / ДИСКИ ──────────────────────────────────────────────
+  { id:"APH-001", cat:"Леза / Диски",  emoji:"🪚",
+    name:"Тристороннє лезо 255×25.4мм",
+    price:280,
+    desc:"Для бензокос і мотокос. Загартована сталь, 3 ріжучі краї. Ресурс до 80 год. роботи." },
+
+  { id:"APH-002", cat:"Леза / Диски",  emoji:"⚙️",
+    name:"Диск металевий 8-зубий 305мм",
+    price:420,
+    desc:"Для жорсткого чагарнику та молодих дерев. Діаметр 305 мм, посадка 25.4 мм." },
+
+  // ── ЛАНЦЮГИ ───────────────────────────────────────────────────
+  { id:"APH-003", cat:"Ланцюги",  emoji:"🔗",
+    name:"Ланцюг пиляльний 3/8\" 1.3мм 52зв.",
+    price:390,
+    desc:"Стандартний ланцюг для шини 35–40 см. Сумісний з STIHL MS 180, Husqvarna 236." },
+
+  { id:"APH-004", cat:"Ланцюги",  emoji:"🔗",
+    name:"Ланцюг напівзрізний 3/8\" 1.5мм 56зв.",
+    price:460,
+    desc:"Для брудної та обмерзлої деревини. Знижений відскік, підвищена безпека." },
+
+  // ── ФІЛЬТРИ ───────────────────────────────────────────────────
+  { id:"APH-005", cat:"Фільтри",  emoji:"🔲",
+    name:"Повітряний фільтр STIHL MS 180/181",
+    price:95,
+    desc:"Оригінальний аналог. Замінник арт. 1130 120 1601. Встановлення без інструментів." },
+
+  { id:"APH-006", cat:"Фільтри",  emoji:"🔲",
+    name:"Паливний фільтр універсальний 5мм",
+    price:45,
+    desc:"Підходить до більшості бензокос і пил з паливопроводом 5 мм. Пластиковий корпус." },
+
+  // ── МАСЛО ─────────────────────────────────────────────────────
+  { id:"APH-007", cat:"Масло",  emoji:"🛢️",
+    name:"Масло для ланцюга Oregon 1L",
+    price:195,
+    desc:"Мінеральне ланцюгове масло. Знижений розкид, захист від зносу. Універсальне 1 л." },
+
+  { id:"APH-008", cat:"Масло",  emoji:"🛢️",
+    name:"Масло 2-тактне STIHL HP 100мл",
+    price:120,
+    desc:"Оригінальне масло для 2-такт. двигунів. Співвідношення 1:50. Захист від нагару." },
+
+  // ── КАРБЮРАТОРИ ───────────────────────────────────────────────
+  { id:"APH-009", cat:"Карбюратори",  emoji:"🔧",
+    name:"Карбюратор Walbro WYL для кос",
+    price:850,
+    desc:"Замінник для більшості мотокос 25–52 cc. Комплект прокладок у комплекті." },
+
+  // ── ЗАПАЛЮВАННЯ ───────────────────────────────────────────────
+  { id:"APH-010", cat:"Запалювання",  emoji:"⚡",
+    name:"Свічка NGK BPMR7A (Champion RCJ6Y)",
+    price:75,
+    desc:"Стандартна свічка для 2-тактних двигунів. Різьба M14×1.25, зазор 0.5 мм." },
+
+  // ── ВИТРАТНИКИ ────────────────────────────────────────────────
+  { id:"APH-011", cat:"Витратники",  emoji:"🧵",
+    name:"Волосінь кругла 2.4мм × 15м",
+    price:65,
+    desc:"Для головок типу AutoCut. Матеріал: нейлон армований. Для важких умов роботи." },
+
+  { id:"APH-012", cat:"Витратники",  emoji:"🧰",
+    name:"Комплект ущільнювачів картера",
+    price:220,
+    desc:"Набір гумових кільць і прокладок для ТО двигуна бензокоси 26–43 cc. 12 шт." },
+
+  // ── ДОДАЙ НОВІ ТОВАРИ ПІСЛЯ ЦЬОГО РЯДКА ──────────────────────
+
+];  // ← кінець масиву, не видаляти!
 
 // ──── STATE ────
 let cart = {};
 // Номер замовлення тепер береться з Google Sheets (єдиний лічильник)
 
-// ──── RENDER ────
-function renderProducts() {
+// ──── FILTERS STATE ────
+let activeCategory = 'all';
+
+// ──── BUILD CATEGORY FILTERS ────
+// Автоматично збирає унікальні категорії з масиву products
+// і рендерить кнопки фільтрів. Не потрібно нічого міняти тут —
+// просто додавай нові cat у товарах.
+function buildCategoryFilters() {
+  const cats = ['all', ...new Set(products.map(p => p.cat))];
+  const container = document.getElementById('catFilters');
+  container.innerHTML = cats.map(c => `
+    <button class="filter-btn${c === 'all' ? ' active' : ''}"
+            onclick="setCategory('${c}')">
+      ${c === 'all' ? 'Всі' : c}
+    </button>`).join('');
+}
+
+function setCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('#catFilters .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === (cat === 'all' ? 'Всі' : cat));
+  });
+  applyFilters();
+}
+
+// ──── APPLY FILTERS ────
+// Викликається при введенні в пошук, зміні категорії або ціни.
+function applyFilters() {
+  const q        = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  const minPrice = parseFloat(document.getElementById('priceMin').value) || 0;
+  const maxPrice = parseFloat(document.getElementById('priceMax').value) || Infinity;
+
+  const filtered = products.filter(p => {
+    const matchCat   = activeCategory === 'all' || p.cat === activeCategory;
+    const matchPrice = p.price >= minPrice && p.price <= maxPrice;
+    const matchQ     = !q ||
+                       p.name.toLowerCase().includes(q) ||
+                       p.id.toLowerCase().includes(q) ||
+                       p.desc.toLowerCase().includes(q) ||
+                       p.cat.toLowerCase().includes(q);
+    return matchCat && matchPrice && matchQ;
+  });
+
+  renderProducts(filtered);
+  document.getElementById('productCountLabel').textContent =
+    filtered.length === products.length
+      ? `(${products.length} позицій)`
+      : `(${filtered.length} з ${products.length})`;
+}
+
+// ──── RENDER PRODUCTS ────
+// Приймає масив товарів і рендерить картки.
+// Підтримує поле img (фото) або emoji як заглушку.
+function renderProducts(list) {
+  if (list === undefined) list = products;
   const grid = document.getElementById('productsGrid');
-  document.getElementById('productCountLabel').textContent = `(${products.length} позицій)`;
-  grid.innerHTML = products.map(p => `
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="no-results">
+        <div class="no-results-icon">🔍</div>
+        Нічого не знайдено — спробуйте змінити фільтри
+      </div>`;
+    return;
+  }
+
+  // ── Як виглядає картка ──────────────────────────────────────
+  // Верхня частина: фото або emoji (поле img або emoji)
+  // Синій тег: артикул (поле id)
+  // Назва: поле name
+  // Опис: поле desc
+  // Ціна: поле price
+  // Кнопка: додає товар у кошик
+  // ─────────────────────────────────────────────────────────────
+  grid.innerHTML = list.map(p => {
+    // Зображення: якщо є поле img — показуємо фото, інакше emoji
+    const thumb = p.img
+      ? `<img src="${p.img}" alt="${p.name}"
+             style="width:100%;height:100%;object-fit:cover;"
+             onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+        + `<span style="display:none;align-items:center;justify-content:center;font-size:3rem;width:100%;height:100%">${p.emoji || '📦'}</span>`
+      : p.emoji || '📦';
+
+    return `
     <div class="product-card">
       <div class="product-thumb">
         <span class="product-cat-tag">${p.cat}</span>
-        ${p.emoji}
+        ${thumb}
       </div>
       <div class="product-body">
         <span class="product-sku">${p.id}</span>
@@ -916,8 +1253,8 @@ function renderProducts() {
           </button>
         </div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 // ──── CART LOGIC ────
@@ -1228,6 +1565,12 @@ function validate() {
   toggleFieldErr('fg-branch', 'f-branch', branchOk);
   if (!branchOk) ok = false;
 
+  // Telegram: необов'язково, але якщо заповнено — має починатись з @
+  const tgVal = document.getElementById('f-tg').value.trim();
+  const tgOk  = !tgVal || /^@[a-zA-Z0-9_]{4,}$/.test(tgVal);
+  toggleFieldErr('fg-tg', 'f-tg', tgOk);
+  if (!tgOk) ok = false;
+
   return ok;
 }
 
@@ -1247,6 +1590,9 @@ async function submitOrder() {
   btn.disabled = true;
   btn.textContent = 'Відправляємо...';
 
+  // ── URL Google Apps Script (замінити якщо передеплоїли) ──
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzHJylGbfDpESDjt4mX49MskiUJgiP5UAUAPhBkHxSHUxR-EkUCvrSZ7s2qPBJpmHtXxQ/exec';
+
   // Отримуємо наступний номер замовлення з таблиці (єдиний лічильник для всіх)
   let num;
   try {
@@ -1260,10 +1606,9 @@ async function submitOrder() {
 
   const name   = document.getElementById('f-name').value.trim();
   const phone  = document.getElementById('f-phone').value.trim();
+  const tg     = document.getElementById('f-tg').value.trim();
   const addr   = `${selectedCityName}, ${selectedBranchText}`;
   const date   = new Date().toLocaleDateString('uk-UA');
-
-  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzHJylGbfDpESDjt4mX49MskiUJgiP5UAUAPhBkHxSHUxR-EkUCvrSZ7s2qPBJpmHtXxQ/exec';
 
   // Формуємо один рядок з усіма товарами замовлення
   const orderItems = Object.entries(cart).map(([id, qty]) => {
@@ -1276,6 +1621,7 @@ async function submitOrder() {
       amount: p.price * qty,
       fullName: name,
       phone: phone,
+      telegram: tg || '—',
       address: addr,
       date: date,
     };
@@ -1301,11 +1647,11 @@ async function submitOrder() {
   // але якщо дані дійшли до Apps Script — вони записані.
   cart = {};
   updateCart();
-  ['f-name','f-phone','f-city','f-branch'].forEach(fid => {
+  ['f-name','f-phone','f-city','f-branch','f-tg'].forEach(fid => {
     const el = document.getElementById(fid);
     if (el) { el.value = ''; el.classList.remove('err'); }
   });
-  ['fg-name','fg-phone','fg-city','fg-branch'].forEach(fid => {
+  ['fg-name','fg-phone','fg-city','fg-branch','fg-tg'].forEach(fid => {
     const el = document.getElementById(fid);
     if (el) { el.classList.remove('has-err','is-ok'); }
   });
@@ -1336,11 +1682,12 @@ function showToast(msg, type='') {
 }
 
 // ──── INIT ────
-renderProducts();
-updateCart();
-initCitySearch();
-initBranchSearch();
-initPhoneFormat();
+buildCategoryFilters();   // будує кнопки фільтрів з масиву products
+renderProducts();         // рендерить усі картки
+updateCart();             // оновлює лічильник кошика
+initCitySearch();         // пошук міст через API Нової Пошти
+initBranchSearch();       // пошук відділень через API Нової Пошти
+initPhoneFormat();        // авто-форматування телефону
 </script>
 </body>
 </html>
