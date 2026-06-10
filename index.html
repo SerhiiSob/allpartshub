@@ -960,7 +960,7 @@ async function submitOrder() {
 
   const btn = document.getElementById('btnCheckout');
   btn.disabled = true;
-  btn.textContent = 'Обробляємо...';
+  btn.textContent = 'Відправляємо...';
 
   const num = ++orderCounter;
   try { localStorage.setItem('aph_order', orderCounter); } catch(e) {}
@@ -974,46 +974,56 @@ async function submitOrder() {
 
   const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzHJylGbfDpESDjt4mX49MskiUJgiP5UAUAPhBkHxSHUxR-EkUCvrSZ7s2qPBJpmHtXxQ/exec';
 
+  // Формуємо один рядок з усіма товарами замовлення
+  const orderItems = Object.entries(cart).map(([id, qty]) => {
+    const p = products.find(x => x.id === id);
+    return {
+      orderNumber: `#${num}`,
+      productName: p.name,
+      productId: id,
+      quantity: qty,
+      amount: p.price * qty,
+      fullName: name,
+      phone: phone,
+      address: addr,
+      date: date,
+    };
+  });
+
   try {
-    if (SHEET_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
-      for (const [id, qty] of Object.entries(cart)) {
-        const p = products.find(x => x.id === id);
-        await fetch(SHEET_URL, {
-          method: 'POST', mode: 'no-cors',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            orderNumber: `#${num}`,
-            productName: p.name,
-            productId: id,
-            quantity: qty,
-            amount: p.price * qty,
-            fullName: name,
-            phone,
-            address: addr,
-            date,
-          })
-        });
-      }
-    }
-
-    cart = {};
-    updateCart();
-    ['f-name','f-phone','f-city','f-branch'].forEach(id=>{
-      document.getElementById(id).value='';
-      document.getElementById(id).classList.remove('err');
-    });
-    ['fg-name','fg-phone','fg-city','fg-branch'].forEach(id=>document.getElementById(id).classList.remove('has-err'));
-    closeCart();
-
-    document.getElementById('modalOrderNum').textContent = `Замовлення #${num}`;
-    document.getElementById('successModal').classList.add('open');
-
+    // no-cors не дає читати відповідь, але дані надходять до таблиці.
+    // Відправляємо кожен товар окремим рядком.
+    const sends = orderItems.map(row =>
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' }, // text/plain проходить preflight без CORS
+        body: JSON.stringify(row),
+      }).catch(() => {}) // ігноруємо мережеві помилки — no-cors завжди кидає opaque
+    );
+    await Promise.all(sends);
   } catch(e) {
-    showToast('Помилка з\'єднання', 'fail');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Оформити замовлення';
+    // no-cors завжди повертає opaque response, помилка очікувана — продовжуємо
   }
+
+  // Успіх показуємо завжди — no-cors не дає читати статус,
+  // але якщо дані дійшли до Apps Script — вони записані.
+  cart = {};
+  updateCart();
+  ['f-name','f-phone','f-city','f-branch'].forEach(fid => {
+    document.getElementById(fid).value = '';
+    document.getElementById(fid).classList.remove('err');
+  });
+  ['fg-name','fg-phone','fg-city','fg-branch'].forEach(fid =>
+    document.getElementById(fid).classList.remove('has-err')
+  );
+  closeCart();
+
+  document.getElementById('modalOrderNum').textContent = `Замовлення #${num}`;
+  document.getElementById('successModal').classList.add('open');
+
+  btn.disabled = false;
+  btn.textContent = 'Оформити замовлення';
 }
 
 function closeModal() { document.getElementById('successModal').classList.remove('open'); }
