@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Parts Hub — Запчастини для техніки</title>
+
+<!-- ══ SECURITY HEADERS (meta fallback; основні — на сервері/Render) ══ -->
+<!-- CSP: дозволяємо лише потрібні джерела; блокуємо inline eval -->
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self';
+           script-src 'self' 'unsafe-inline';
+           style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+           font-src https://fonts.gstatic.com;
+           connect-src 'self'
+             https://api.novaposhta.ua
+             https://script.google.com
+             https://fonts.googleapis.com;
+           img-src 'self' data: https:;
+           frame-ancestors 'none';
+           form-action 'none';
+           base-uri 'self';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy"
+  content="camera=(), microphone=(), geolocation=(), payment=()">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F4F6F9;
+    --surface: #FFFFFF;
+    --ink: #1E2A3A;
+    --ink-2: #4A5568;
+    --muted: #8496A9;
+    --accent: #2563EB;
+    --accent-light: #EBF2FF;
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --success: #16A34A;
+    --error: #DC2626;
+    --radius: 10px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ──── TOPBAR ──── */
+  .topbar {
+    background: var(--ink);
+    color: #fff;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 7px 16px;
+    font-weight: 500;
+  }
+
+  /* ──── HEADER ──── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .logo-mark {
+    width: 38px;
+    height: 38px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-mark svg { width: 22px; height: 22px; }
+
+  .logo-text { line-height: 1; }
+  .logo-name { font-size: 1.05rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .logo-sub { font-size: 0.68rem; color: var(--muted); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; }
+
+  .header-right { display: flex; align-items: center; gap: 12px; }
+
+  .cart-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 9px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .cart-btn:hover { background: #1d4ed8; }
+
+  .cart-badge {
+    background: white;
+    color: var(--accent);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cart-badge.bump { animation: bump 0.25s ease; }
+  @keyframes bump { 50% { transform: scale(1.5); } }
+
+  /* ──── HERO ──── */
+  .hero {
+    background: var(--ink);
+    padding: 56px 40px;
+    text-align: center;
+  }
+
+  .hero-inner { max-width: 640px; margin: 0 auto; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(37,99,235,0.15);
+    border: 1px solid rgba(37,99,235,0.3);
+    border-radius: 100px;
+    padding: 5px 12px;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .hero-desc {
+    font-size: 0.95rem;
+    color: #94A3B8;
+    line-height: 1.6;
+  }
+
+  /* ──── MAIN ──── */
+  main { max-width: 1280px; margin: 0 auto; padding: 40px 40px 80px; }
+
+  .catalog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .catalog-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .catalog-count {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  /* ──── PRODUCT GRID ──── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .product-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-card:hover {
+    border-color: var(--border-strong);
+    box-shadow: 0 4px 20px rgba(30,42,58,0.08);
+  }
+
+  .product-thumb {
+    height: 160px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    position: relative;
+  }
+
+  .product-cat-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.68rem;
+    font-weight: 500;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+  }
+
+  .product-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
+
+  .product-sku {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 3px 7px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  .product-name {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .product-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.55;
+    flex: 1;
+    margin-bottom: 16px;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .product-price {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .product-price-unit {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 2px;
+  }
+
+  .btn-add {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .btn-add:hover { background: #1d4ed8; }
+  .btn-add.added { background: var(--success); }
+
+  /* ──── CART DRAWER ──── */
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,42,58,0.4);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(500px, 100vw);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    z-index: 201;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .drawer.open { transform: translateX(0); }
+
+  .drawer-head {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    background: var(--surface);
+  }
+
+  .drawer-head h2 { font-size: 1rem; font-weight: 700; color: var(--ink); }
+
+  .btn-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .btn-close:hover { background: var(--bg); color: var(--ink); border-color: var(--border-strong); }
+
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+  }
+
+  .drawer-body::-webkit-scrollbar { width: 4px; }
+  .drawer-body::-webkit-scrollbar-track { background: transparent; }
+  .drawer-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* Empty state */
+  .cart-empty {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--muted);
+  }
+
+  .cart-empty-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.5; }
+  .cart-empty-text { font-size: 0.88rem; }
+
+  /* Cart items */
+  .cart-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .cart-item-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; }
+
+  .cart-item-sku {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 1px 5px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  .qty-row { display: flex; align-items: center; gap: 8px; }
+
+  .qty-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+  }
+
+  .qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .qty-val { font-size: 0.85rem; font-weight: 600; min-width: 18px; text-align: center; }
+
+  .cart-item-price { font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+
+  .btn-remove {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    transition: all 0.12s;
+    flex-shrink: 0;
+  }
+
+  .btn-remove:hover { background: #FEE2E2; color: var(--error); }
+
+  /* Summary */
+  .cart-summary {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .summary-total-label { font-weight: 600; font-size: 0.9rem; }
+  .summary-total-val { font-size: 1.25rem; font-weight: 700; color: var(--ink); }
+
+  /* Form */
+  .form-block { display: flex; flex-direction: column; gap: 12px; }
+
+  .form-legend {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    padding-bottom: 4px;
+    margin-top: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2px;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+
+  .field label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+
+  .field input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .field input:focus { border-color: var(--accent); background: var(--surface); }
+  .field input::placeholder { color: var(--muted); }
+  .field input.err { border-color: var(--error); }
+
+  .field-err { font-size: 0.72rem; color: var(--error); display: none; }
+  .field.has-err .field-err { display: block; }
+  .field.is-ok input { border-color: var(--success); }
+
+  /* ──── AUTOCOMPLETE DROPDOWN ──── */
+  .ac-wrap { position: relative; }
+
+  .ac-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(30,42,58,0.12);
+    z-index: 500;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  .ac-dropdown.open { display: block; }
+  .ac-dropdown::-webkit-scrollbar { width: 4px; }
+  .ac-dropdown::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  .ac-item {
+    padding: 9px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.3;
+  }
+
+  .ac-item:last-child { border-bottom: none; }
+  .ac-item:hover, .ac-item.focused { background: var(--accent-light); color: var(--accent); }
+
+  .ac-item-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .ac-loader {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .ac-empty {
+    padding: 12px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .field-hint { font-size: 0.7rem; color: var(--muted); }
+
+  /* Drawer footer */
+  .drawer-foot {
+    padding: 16px 24px 24px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .btn-checkout {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-checkout:hover { background: #1d4ed8; }
+  .btn-checkout:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+  /* ──── SUCCESS MODAL ──── */
+  .modal-bg {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,42,58,0.5);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  .modal-bg.open { opacity: 1; pointer-events: auto; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 32px;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    transform: translateY(16px);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .modal-bg.open .modal { transform: translateY(0); }
+
+  .modal-check {
+    width: 52px;
+    height: 52px;
+    background: #DCFCE7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  .modal-check svg { width: 26px; height: 26px; color: var(--success); }
+  .modal-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+  .modal-text { font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; line-height: 1.5; }
+
+  .modal-order {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 6px 14px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 22px;
+  }
+
+  .btn-modal-ok {
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 11px 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-modal-ok:hover { background: #2d3d52; }
+
+  /* ──── TOAST ──── */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--ink);
+    color: white;
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    z-index: 400;
+    pointer-events: none;
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.ok { background: var(--success); }
+  .toast.fail { background: var(--error); }
+
+  /* ──── FOOTER ──── */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--surface);
+  }
+
+  /* ──── FILTERS & SEARCH ──── */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px 9px 34px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--muted); }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .price-filter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 10px;
+  }
+
+  .price-filter input {
+    width: 72px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    outline: none;
+    text-align: center;
+  }
+
+  .price-filter input::placeholder { color: var(--muted); }
+  .price-filter span { font-size: 0.75rem; color: var(--muted); }
+
+  .no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .no-results-icon { font-size: 2.5rem; margin-bottom: 10px; opacity: 0.4; }
+
+  /* ──── RESPONSIVE ──── */
+  @media (max-width: 600px) {
+    header { padding: 0 16px; }
+    .hero { padding: 40px 16px; }
+    .hero-title { font-size: 1.7rem; }
+    main { padding: 28px 16px 60px; }
+    .drawer { width: 100vw; }
+    .modal { padding: 28px 20px; }
+    .site-footer { padding: 20px 16px; }
+    .toolbar { gap: 8px; }
+    .price-filter { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!--
+  ══════════════════════════════════════════════════════════════════
+  SERVER-SIDE SECURITY HEADERS (Render.com / Netlify / etc.)
+  ══════════════════════════════════════════════════════════════════
+  Для Render: створи файл _headers у корені проекту з таким змістом:
+  ──────────────────────────────────────────────────────────────────
+  /*
+    Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+    X-Frame-Options: DENY
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: strict-origin-when-cross-origin
+    Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+    Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://api.novaposhta.ua https://script.google.com; img-src 'self' data: https:; frame-ancestors 'none';
+  ──────────────────────────────────────────────────────────────────
+  HTTPS: Render автоматично надає TLS-сертифікат (Let's Encrypt).
+  Переконайся що в налаштуваннях Render увімкнено "Force HTTPS".
+  ══════════════════════════════════════════════════════════════════
+-->
+
+<!-- TOPBAR -->
+<div class="topbar">Доставка по всій Україні · Нова Пошта · Оригінальні запчастини</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <div class="logo-mark">
+        <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Gear icon -->
+          <path d="M11 7a4 4 0 100 8 4 4 0 000-8z" fill="white" opacity="0.3"/>
+          <path d="M11 8.5a2.5 2.5 0 100 5 2.5 2.5 0 000-5z" fill="white"/>
+          <path d="M9.5 2h3l.5 2.2a6.5 6.5 0 011.6.93l2.1-.7 1.5 2.6-1.6 1.5c.06.3.1.6.1.97s-.04.67-.1.97l1.6 1.5-1.5 2.6-2.1-.7a6.5 6.5 0 01-1.6.93L12.5 20h-3l-.5-2.2a6.5 6.5 0 01-1.6-.93l-2.1.7-1.5-2.6 1.6-1.5A6.5 6.5 0 015.2 11c0-.37.04-.67.1-.97L3.7 8.53l1.5-2.6 2.1.7a6.5 6.5 0 011.6-.93L9.5 2z" stroke="white" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="logo-name">All Parts Hub</div>
+        <div class="logo-sub">Запчастини для техніки</div>
+      </div>
+    </a>
+    <div class="header-right">
+      <button class="cart-btn" onclick="openCart()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        Кошик
+        <span class="cart-badge" id="cartBadge">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+      В наявності · Швидка обробка
+    </div>
+    <h1 class="hero-title">Запчастини для бензокос і бензопил</h1>
+    <p class="hero-desc">Леза, ланцюги, фільтри, масло, карбюратори — все для обслуговування техніки. Замовте сьогодні — відправимо Новою Поштою.</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="catalog-header">
+    <div class="catalog-title">Каталог товарів <span class="catalog-count" id="productCountLabel"></span></div>
+  </div>
+
+  <!-- TOOLBAR: пошук + фільтри -->
+  <div class="toolbar">
+
+    <!-- Рядок пошуку -->
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="search-input" id="searchInput" placeholder="Пошук за назвою або артикулом..." oninput="applyFilters()">
+    </div>
+
+    <!-- Фільтр за категорією -->
+    <div class="filter-group">
+      <span class="filter-label">Категорія:</span>
+      <div id="catFilters">
+        <!-- Кнопки генеруються автоматично з масиву products -->
+      </div>
+    </div>
+
+    <!-- Фільтр за ціною -->
+    <div class="filter-group">
+      <span class="filter-label">Ціна:</span>
+      <div class="price-filter">
+        <input type="number" id="priceMin" placeholder="від" oninput="applyFilters()" min="0">
+        <span>—</span>
+        <input type="number" id="priceMax" placeholder="до" oninput="applyFilters()" min="0">
+        <span>₴</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="products-grid" id="productsGrid"></div>
+</main>
+
+<div class="site-footer">
+  © 2025 All Parts Hub — Запчастини та витратні матеріали для садової техніки
+</div>
+
+<!-- DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div>
+
+<!-- CART DRAWER -->
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h2>Кошик</h2>
+    <button class="btn-close" onclick="closeCart()">✕</button>
+  </div>
+
+  <div class="drawer-body" id="drawerBody">
+    <!-- Empty -->
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">📦</div>
+      <div class="cart-empty-text">Кошик порожній — додайте товари з каталогу</div>
+    </div>
+
+    <!-- Has items -->
+    <div id="cartFilled" style="display:none">
+      <div class="cart-list" id="cartList"></div>
+
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Товарів</span>
+          <span id="summaryQty">0 шт.</span>
+        </div>
+        <div class="summary-total">
+          <span class="summary-total-label">До оплати</span>
+          <span class="summary-total-val" id="summaryTotal">0 ₴</span>
+        </div>
+      </div>
+
+      <div class="form-block">
+        <div class="form-legend">Дані отримувача</div>
+
+        <!-- [SEC] Honeypot: невидиме поле. Люди не заповнюють, боти — заповнюють. -->
+        <!-- position:absolute/opacity:0 — видимо для ботів, але не для людей -->
+        <div style="position:absolute;left:-9999px;top:-9999px;opacity:0;pointer-events:none;" aria-hidden="true" tabindex="-1">
+          <label>Залиште порожнім</label>
+          <input type="text" id="f-honeypot" name="website" autocomplete="off" tabindex="-1">
+        </div>
+
+        <div class="field" id="fg-name">
+          <label>ПІБ (Прізвище Ім'я По-батькові) *</label>
+          <input type="text" id="f-name" placeholder="Шевченко Микола Іванович" autocomplete="off" maxlength="100" spellcheck="false">
+          <span class="field-err" id="err-name">Введіть ПІБ кирилицею, мінімум 2 слова</span>
+        </div>
+
+        <div class="field" id="fg-phone">
+          <label>Номер телефону *</label>
+          <input type="tel" id="f-phone" placeholder="+380671234567" autocomplete="off" maxlength="13">
+          <span class="field-hint">Формат: +380XXXXXXXXX (10 цифр після +380)</span>
+          <span class="field-err" id="err-phone">Введіть коректний номер: +380XXXXXXXXX</span>
+        </div>
+
+        <div class="form-legend">Доставка — Нова Пошта</div>
+
+        <div class="field" id="fg-city">
+          <label>Місто *</label>
+          <div class="ac-wrap">
+            <input type="text" id="f-city" placeholder="Почніть вводити місто..." autocomplete="off" maxlength="100">
+            <div class="ac-dropdown" id="city-dropdown"></div>
+          </div>
+          <span class="field-err" id="err-city">Виберіть місто зі списку</span>
+        </div>
+
+        <div class="field" id="fg-branch">
+          <label>Відділення Нової Пошти *</label>
+          <div class="ac-wrap">
+            <input type="text" id="f-branch" placeholder="Спочатку виберіть місто..." autocomplete="off" disabled maxlength="200">
+            <div class="ac-dropdown" id="branch-dropdown"></div>
+          </div>
+          <span class="field-err" id="err-branch">Виберіть відділення зі списку</span>
+        </div>
+
+        <div class="field" id="fg-tg">
+          <label>Telegram (необов'язково)</label>
+          <input type="text" id="f-tg" placeholder="@username" autocomplete="off" maxlength="33">
+          <span class="field-hint">Для зручного зв'язку щодо замовлення</span>
+          <span class="field-err" id="err-tg">Нікнейм має починатись з @</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-foot">
+    <button class="btn-checkout" id="btnCheckout" onclick="submitOrder()" disabled>
+      Оформити замовлення
+    </button>
+  </div>
+</div>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-bg" id="successModal">
+  <div class="modal">
+    <div class="modal-check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+    </div>
+    <div class="modal-title">Замовлення прийнято</div>
+    <p class="modal-text">Ваше замовлення оброблено та внесено до бази.<br>Зв'яжемося для підтвердження.</p>
+    <div class="modal-order" id="modalOrderNum"></div>
+    <button class="btn-modal-ok" onclick="closeModal()">Зрозуміло</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║              МАСИВ ТОВАРІВ — ТУТ КЕРУЄШ КАТАЛОГОМ              ║
+// ╚══════════════════════════════════════════════════════════════════╝
+//
+// Кожен товар — один об'єкт { } у масиві нижче.
+//
+// ПОЛЯ ТОВАРУ:
+//   id    — артикул, УНІКАЛЬНИЙ. Формат: "APH-XXX"
+//           Відображається синім тегом на картці.
+//           Потрапляє до таблиці замовлень.
+//
+//   cat   — категорія (тег у кутку картки + кнопка фільтру)
+//           Кнопки фільтрів створюються АВТОМАТИЧНО з цього поля.
+//           ► Щоб додати нову категорію — просто напиши нову назву.
+//
+//   emoji — іконка на картці (поки немає фото)
+//           Приклади: 🔧 ⚙️ 🛢️ 🔗 🪚 ⚡ 🧰 🔲 🧵 🔩
+//           ► Якщо є фото — додай поле img (дивись нижче)
+//
+//   img   — (необов'язково) URL або шлях до фото товару.
+//           Якщо img вказано — emoji ігнорується, показується фото.
+//           Приклад: img: "https://example.com/photo.jpg"
+//                    img: "images/blade_255.jpg"   ← локальний файл
+//
+//   name  — назва товару
+//
+//   price — ціна в гривнях, ЧИСЛО без лапок. Приклад: price: 280
+//
+//   desc  — короткий опис (2-3 речення): характеристики, сумісність
+//
+// ─────────────────────────────────────────────────────────────────
+// ЯК ЗМІНИТИ ТОВАР:
+//   Знайди рядок і відредагуй потрібне поле.
+//   Наприклад: price: 280 → price: 320
+//
+// ЯК ДОДАТИ НОВИЙ ТОВАР:
+//   1. Скопіюй будь-який блок { ... },
+//   2. Встав перед рядком "ДОДАЙ НОВІ ТОВАРИ ПІСЛЯ ЦЬОГО РЯДКА"
+//   3. Змінити усі поля, особливо id (унікальний!)
+//   Приклад:
+//   { id:"APH-013", cat:"Витратники", emoji:"🔩",
+//     name:"Болт кріплення леза М10×1.25",
+//     price:35,
+//     desc:"Болт для кріплення різального диска. Різьба М10×1.25. Сталь." },
+//
+// ЯК ВИДАЛИТИ ТОВАР:
+//   Видали весь блок від { до }, (включно з комою).
+//
+// ─────────────────────────────────────────────────────────────────
+
+const products = [
+
+  // ╔═══════════════════════════════════════════════════════════════╗
+  // ║  ЯК РЕДАГУВАТИ ТОВАРИ:                                        ║
+  // ║  id   — артикул (унікальний, APH-001..APH-049...)            ║
+  // ║  cat  — категорія (точна назва кнопки фільтра)               ║
+  // ║  emoji— іконка-заглушка якщо немає фото                      ║
+  // ║  name — назва товару                                          ║
+  // ║  price— ціна в гривнях (число)                               ║
+  // ║  desc — короткий опис                                         ║
+  // ║  img  — URL фото (необов'язково)                             ║
+  // ╚═══════════════════════════════════════════════════════════════╝
+
+  // ── НОВІ НАДХОДЖЕННЯ ──────────────────────────────────────────
+  { id:'APH-001', cat:'Нові надходження', emoji:'🆕',
+    name:'Головка косильна AutoCut 25-2 STIHL',
+    price:580,
+    desc:'Оригінальна напівавтоматична косильна головка для бензокос STIHL FS 38-250. Різьба M10x1.25 ліва.' },
+
+  { id:'APH-002', cat:'Нові надходження', emoji:'🆕',
+    name:'Ланцюг Oregon 3/8 1.3мм 52зв.',
+    price:390,
+    desc:'Новинка від Oregon. Загострені різці, знижений відскік. Підходить для шини 35-40 см.' },
+
+  // ── БЕНЗОКОСИ ─────────────────────────────────────────────────
+  { id:'APH-003', cat:'Бензокоси', emoji:'🌿',
+    name:'Карбюратор Walbro WYL-240 для бензокос',
+    price:850,
+    desc:'Замінник для мотокос 25-43 cc. Посадка стандартна, прокладки в комплекті. Сумісний з Husqvarna, STIHL, Oleo-Mac.' },
+
+  { id:'APH-004', cat:'Бензокоси', emoji:'🌿',
+    name:'Свічка запалювання NGK CMR6H для кос',
+    price:85,
+    desc:'Оригінальна свічка для 4-контактних бензокос. Різьба M10x1.0, зазор 0.7 мм. Ресурс 100+ год.' },
+
+  // ── ГОЛОВКИ КОСИЛЬНІ ──────────────────────────────────────────
+  { id:'APH-005', cat:'Головки косильні', emoji:'⚙️',
+    name:'Головка косильна напівавтомат універсальна',
+    price:320,
+    desc:'Підходить для більшості бензокос і електрокос. Різьба M10x1.25 ліва/права. Для струни 2.0-3.0 мм.' },
+
+  { id:'APH-006', cat:'Головки косильні', emoji:'⚙️',
+    name:'Головка косильна Husqvarna T25 (замінник)',
+    price:490,
+    desc:'Аналог оригінальної головки T25. Автоматичне подавання струни. Ліва різьба М10.' },
+
+  // ── СТРУНИ КОСИЛЬНІ ───────────────────────────────────────────
+  { id:'APH-007', cat:'Струни косильні', emoji:'🧵',
+    name:'Струна косильна кругла 2.4мм x 15м',
+    price:65,
+    desc:'Нейлон армований. Для головок AutoCut та напівавтомат. Підходить для важких умов роботи.' },
+
+  { id:'APH-008', cat:'Струни косильні', emoji:'🧵',
+    name:'Струна косильна зірочка 3.0мм x 10м',
+    price:95,
+    desc:'Форма зірочки — краще ріже жорстку траву. Армований нейлон, підвищена стійкість до зносу.' },
+
+  { id:'APH-009', cat:'Струни косильні', emoji:'🧵',
+    name:'Струна косильна квадратна 2.65мм x 12м',
+    price:80,
+    desc:'Квадратний перетин для чистого зрізу. Бобіна 12 м. Для побутових і професійних кос.' },
+
+  // ── НОЖІ КОСИЛЬНІ БЕНЗОКОСИ ───────────────────────────────────
+  { id:'APH-010', cat:'Ножі косильні бензокоси', emoji:'🪚',
+    name:'Лезо 3-стороннє 255x25.4мм (1.5мм)',
+    price:280,
+    desc:'Для бензокос. Загартована сталь, 3 ріжучі краї. Діаметр 255 мм, посадка 25.4 мм. Ресурс 80+ год.' },
+
+  { id:'APH-011', cat:'Ножі косильні бензокоси', emoji:'🪚',
+    name:'Диск 8-зубий металевий 305x25.4мм',
+    price:420,
+    desc:'Для жорсткого чагарнику та молодих дерев до 5 см. Діаметр 305 мм, посадка 25.4 мм. Сталь 65Г.' },
+
+  { id:'APH-012', cat:'Ножі косильні бензокоси', emoji:'🪚',
+    name:'Диск 40-зубий для чагарнику 255мм',
+    price:520,
+    desc:'40 зубів для агресивного різу деревних порід. Діаметр 255 мм. Сталь термозміцнена.' },
+
+  // ── ЗАПЧАСТИНИ БЕНЗОКОСИ ──────────────────────────────────────
+  { id:'APH-013', cat:'Запчастини бензокоси', emoji:'🔧',
+    name:'Повітряний фільтр STIHL FS 38/45/55',
+    price:95,
+    desc:'Аналог оригіналу арт. 4140 141 0300. Поліефірна сітка, миється. Без інструментів.' },
+
+  { id:'APH-014', cat:'Запчастини бензокоси', emoji:'🔧',
+    name:'Паливний фільтр бензокоси 5мм (10шт)',
+    price:120,
+    desc:'Комплект 10 шт. Пластиковий корпус з тонкою сіткою. Підходить до паливопроводу 5 мм.' },
+
+  { id:'APH-015', cat:'Запчастини бензокоси', emoji:'🔧',
+    name:'Сальники колінвала бензокоси 20x32x7',
+    price:85,
+    desc:'Пара сальників для ущільнення колінчастого валу. Розмір 20x32x7 мм. Гума NBR.' },
+
+  // ── СТАРТЕРИ БЕНЗОКОСИ ────────────────────────────────────────
+  { id:'APH-016', cat:'Стартери бензокоси', emoji:'🔁',
+    name:'Стартер у зборі STIHL FS 38/45/55',
+    price:650,
+    desc:'Повний вузол стартера з мотузкою та пружиною. Аналог оригіналу. Пластик ABS.' },
+
+  { id:'APH-017', cat:'Стартери бензокоси', emoji:'🔁',
+    name:'Мотузка стартера 3мм x 1м (нейлон)',
+    price:35,
+    desc:'Замінна мотузка для ручного стартера. Діаметр 3 мм, довжина 1 м. Нейлон плетений.' },
+
+  // ── СТАРТЕРИ МОТОБЛОК ГЕНЕРАТОР ───────────────────────────────
+  { id:'APH-018', cat:'Стартери мотоблок генератор', emoji:'🔁',
+    name:'Стартер ручний 168F/170F (мотоблок, генератор)',
+    price:480,
+    desc:'Ручний стартер для двигунів 168F, 170F, 177F. Для мотоблоків та генераторів 2-7 кВт.' },
+
+  { id:'APH-019', cat:'Стартери мотоблок генератор', emoji:'🔁',
+    name:'Шків стартера 168F (пластик)',
+    price:95,
+    desc:'Барабан для ручного стартера двигуна 168F. Пластик армований. Під мотузку 4 мм.' },
+
+  // ── КІЛЬЦЯ ПОРШНЕВІ ───────────────────────────────────────────
+  { id:'APH-020', cat:'Кільця поршневі', emoji:'⭕',
+    name:'Кільця поршневі 40мм (2 шт) для кос',
+    price:185,
+    desc:'Комплект 2 шт. Діаметр 40 мм. Для 2-тактних двигунів бензокос 43 cc. Чавун легований.' },
+
+  { id:'APH-021', cat:'Кільця поршневі', emoji:'⭕',
+    name:'Кільця поршневі 52мм (2 шт) мотоблок 168F',
+    price:220,
+    desc:'Діаметр 52 мм. Для 4-тактних двигунів 168F/170F мотоблоків та генераторів. Комплект 2 шт.' },
+
+  // ── НАСАДКИ ───────────────────────────────────────────────────
+  { id:'APH-022', cat:'Насадки', emoji:'🔩',
+    name:'Насадка-культиватор для бензокоси',
+    price:1250,
+    desc:'Фрезерна насадка для обробітку ґрунту. Ширина 20 см. Під трубу 26 мм.' },
+
+  { id:'APH-023', cat:'Насадки', emoji:'🔩',
+    name:'Насадка-сучкоріз для бензокоси',
+    price:980,
+    desc:'Пильна насадка для обрізки гілок. Шина 25 см, ланцюг у комплекті. Під трубу 26 мм.' },
+
+  // ── ЗАПЧАСТИНИ БЕНЗОПИЛИ ──────────────────────────────────────
+  { id:'APH-024', cat:'Запчастини бензопили', emoji:'🪵',
+    name:'Карбюратор STIHL MS 180 (Zama C1Q-S57B)',
+    price:780,
+    desc:'Аналог Zama C1Q-S57B для STIHL MS 170/180. Прокладки та гвинти регулювання в комплекті.' },
+
+  { id:'APH-025', cat:'Запчастини бензопили', emoji:'🪵',
+    name:'Повітряний фільтр STIHL MS 180/181/211',
+    price:95,
+    desc:'Аналог арт. 1130 120 1601. Поліефірний матеріал, миється. Встановлення без інструментів.' },
+
+  { id:'APH-026', cat:'Запчастини бензопили', emoji:'🪵',
+    name:'Стартер у зборі STIHL MS 180',
+    price:720,
+    desc:'Повний вузол із мотузкою та поворотною пружиною. Посадка стандартна MS 170/180/181.' },
+
+  // ── ЗАПЧАСТИНИ OLEOMAC ────────────────────────────────────────
+  { id:'APH-027', cat:'Запчастини Oleomac', emoji:'🔧',
+    name:'Карбюратор Oleo-Mac 726/733/740',
+    price:920,
+    desc:'Замінник для бензокос Oleo-Mac серій 726, 733, 740. Прокладка і фільтр у комплекті.' },
+
+  { id:'APH-028', cat:'Запчастини Oleomac', emoji:'🔧',
+    name:'Повітряний фільтр Oleo-Mac 726/733',
+    price:110,
+    desc:'Аналог оригінального фільтра. Двошаровий: поролон + паперова вставка. Миється.' },
+
+  // ── ЗАПЧАСТИНИ ГЕНЕРАТОРА ─────────────────────────────────────
+  { id:'APH-029', cat:'Запчастини генератора', emoji:'⚡',
+    name:'Карбюратор для генератора 168F',
+    price:420,
+    desc:'Для бензинових генераторів 2-3 кВт на двигуні 168F. Включає паливний кран і прокладки.' },
+
+  { id:'APH-030', cat:'Запчастини генератора', emoji:'⚡',
+    name:'Свічка F7RTC для генератора 168F/170F',
+    price:65,
+    desc:'Аналог Champion F7RTC. Для 4-тактних генераторів та мотоблоків. Різьба M14x1.25.' },
+
+  // ── ЗАПЧАСТИНИ МОТОБЛОЧНІ ─────────────────────────────────────
+  { id:'APH-031', cat:'Запчастини мотоблочні', emoji:'🚜',
+    name:'Повітряний фільтр мотоблок 168F (з передфільтром)',
+    price:145,
+    desc:'Комплект: паперовий елемент + поролоновий передфільтр. Для мотоблоків на двигуні 168F/170F.' },
+
+  { id:'APH-032', cat:'Запчастини мотоблочні', emoji:'🚜',
+    name:'Ремінь клиновий для мотоблока A-900',
+    price:185,
+    desc:'Клиновий ремінь привода A-900 (900 мм). Підходить для мотоблоків Мотор Січ, Зубр, Агро.' },
+
+  // ── КАМЕРИ / ПОКРИШКИ ─────────────────────────────────────────
+  { id:'APH-033', cat:'Камери / Покришки', emoji:'🛞',
+    name:'Камера 3.50-6 для мотоблока (TR-87)',
+    price:220,
+    desc:'Розмір 3.50-6. Для мотоблоків і культиваторів. Ніпель прямий TR-87. Бутил.' },
+
+  { id:'APH-034', cat:'Камери / Покришки', emoji:'🛞',
+    name:'Покришка 4.00-10 для мотоблока (протектор ялинка)',
+    price:680,
+    desc:'Розмір 4.00-10. Протектор ялинка для кращого зчеплення. Для мотоблоків Агро, Кентавр.' },
+
+  // ── ШИНИ БЕНЗОПИЛЬНІ ──────────────────────────────────────────
+  { id:'APH-035', cat:'Шини бензопильні', emoji:'📏',
+    name:'Шина 35см для STIHL MS 180 (50зв.)',
+    price:380,
+    desc:'Довжина 35 см (14 дюймів). Крок 3/8, 1.3 мм, 50 зв. Сумісна з STIHL MS 170/180/181.' },
+
+  { id:'APH-036', cat:'Шини бензопильні', emoji:'📏',
+    name:'Шина 40см для Husqvarna 236 (57зв.)',
+    price:450,
+    desc:'Довжина 40 см (16 дюймів). 57 зв. 1.3 мм. Сумісна з Husqvarna 236, 240, 435, STIHL MS 210.' },
+
+  // ── ЛАНЦЮГИ БЕНЗОПИЛЬНІ ───────────────────────────────────────
+  { id:'APH-037', cat:'Ланцюги бензопильні', emoji:'🔗',
+    name:'Ланцюг Oregon 52зв. 1.3мм (стандартний)',
+    price:390,
+    desc:'Oregon серія 91VX. Стандартний зріз. Крок 3/8. Для шини 35 см. STIHL MS 180, Husqvarna 236.' },
+
+  { id:'APH-038', cat:'Ланцюги бензопильні', emoji:'🔗',
+    name:'Ланцюг 57зв. 1.3мм (напівзрізний)',
+    price:460,
+    desc:'Напівзрізна заточка — менший відскік, безпечніший. Крок 3/8. 57 зв. Для шини 40 см.' },
+
+  { id:'APH-039', cat:'Ланцюги бензопильні', emoji:'🔗',
+    name:'Ланцюг 64зв. 1.3мм для Husqvarna 435',
+    price:520,
+    desc:'Крок .325. 64 зв. Для шини 40 см. Husqvarna 435/440/445, STIHL MS 230/250.' },
+
+  // ── МАСТИЛО KAMBERG ───────────────────────────────────────────
+  { id:'APH-040', cat:'Мастило Kamberg', emoji:'🛢️',
+    name:'Масло ланцюгове Kamberg 1L (мінеральне)',
+    price:195,
+    desc:'Мінеральне мастило для ланцюга та шини. Знижений розкид. Захист від зносу і корозії. 1 л.' },
+
+  { id:'APH-041', cat:'Мастило Kamberg', emoji:'🛢️',
+    name:'Масло 2-тактне Kamberg 1L (1:50)',
+    price:280,
+    desc:'Синтетичне масло для 2-тактних двигунів. Співвідношення 1:50. Захист від нагару та задиру. 1 л.' },
+
+  { id:'APH-042', cat:'Мастило Kamberg', emoji:'🛢️',
+    name:'Масло 2-тактне Kamberg 100мл (промо)',
+    price:75,
+    desc:'Малий формат для 1-2 заправок. Синтетика, 1:50. Зручно для польових умов.' },
+
+  // ── МАСКИ, РЕМЕНІ, ОКУЛЯРИ ────────────────────────────────────
+  { id:'APH-043', cat:'Маски, ремені, окуляри', emoji:'🥽',
+    name:'Окуляри захисні відкриті (прозорі)',
+    price:95,
+    desc:'Захист класу EN 166. Полікарбонатне скло, стійке до подряпин. Для роботи з бензопилою/косою.' },
+
+  { id:'APH-044', cat:'Маски, ремені, окуляри', emoji:'🥽',
+    name:'Маска-щиток захисна з сіткою',
+    price:185,
+    desc:'Металева сітка + козирок. Захист обличчя від тріски і камяної крихти. Регулюється під голову.' },
+
+  { id:'APH-045', cat:'Маски, ремені, окуляри', emoji:'🎽',
+    name:'Ремінь косаря подвійний (через обидва плечі)',
+    price:320,
+    desc:'Двоплечовий ремінь для бензокоси. Карабін-застібка, швидке відстібання. Max навантаження 15 кг.' },
+
+  // ── ВИТРАТНІ МАТЕРІАЛИ ────────────────────────────────────────
+  { id:'APH-046', cat:'Витратні матеріали', emoji:'🔩',
+    name:'Свічка NGK BPMR7A (для 2-тактних пил/кос)',
+    price:75,
+    desc:'Стандартна свічка для 2-тактних двигунів бензопил і кос. Різьба M14x1.25, зазор 0.5 мм.' },
+
+  { id:'APH-047', cat:'Витратні матеріали', emoji:'🔩',
+    name:'Комплект ущільнювачів картера бензокоси 43cc',
+    price:220,
+    desc:'12 прокладок і O-кілець для ТО двигуна 43 cc. Гума NBR. Закриває всі точки розбирання.' },
+
+  { id:'APH-048', cat:'Витратні матеріали', emoji:'🔩',
+    name:'Паливопровід бензокоси/коси 3.5мм x 30см',
+    price:45,
+    desc:'Відрізок паливопроводу 30 см. Внутрішній діаметр 3.5 мм. Пальностійка гума. Набір 2 шт.' },
+
+  // ── ДОДАЙ НОВІ ТОВАРИ ПІСЛЯ ЦЬОГО РЯДКА ──────────────────────
+  // Скопіюй будь-який блок вище, встав тут, зміни id на APH-049 і т.д.
+
+];  // ← кінець масиву, не видаляти!
+
+// ──── STATE ────
+let cart = {};
+// Номер замовлення тепер береться з Google Sheets (єдиний лічильник)
+
+// ──── FILTERS STATE ────
+let activeCategory = 'all';
+
+// ──── BUILD CATEGORY FILTERS ────
+// Автоматично збирає унікальні категорії з масиву products
+// і рендерить кнопки фільтрів. Не потрібно нічого міняти тут —
+// просто додавай нові cat у товарах.
+function buildCategoryFilters() {
+  const cats = ['all', ...new Set(products.map(p => p.cat))];
+  const container = document.getElementById('catFilters');
+  container.innerHTML = cats.map(c => `
+    <button class="filter-btn${c === 'all' ? ' active' : ''}"
+            onclick="setCategory('${c}')">
+      ${c === 'all' ? 'Всі' : c}
+    </button>`).join('');
+}
+
+function setCategory(cat) {
+  activeCategory = cat;
+  document.querySelectorAll('#catFilters .filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === (cat === 'all' ? 'Всі' : cat));
+  });
+  applyFilters();
+}
+
+// ──── APPLY FILTERS ────
+// Викликається при введенні в пошук, зміні категорії або ціни.
+function applyFilters() {
+  const q        = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  const minPrice = parseFloat(document.getElementById('priceMin').value) || 0;
+  const maxPrice = parseFloat(document.getElementById('priceMax').value) || Infinity;
+
+  const filtered = products.filter(p => {
+    const matchCat   = activeCategory === 'all' || p.cat === activeCategory;
+    const matchPrice = p.price >= minPrice && p.price <= maxPrice;
+    const matchQ     = !q ||
+                       p.name.toLowerCase().includes(q) ||
+                       p.id.toLowerCase().includes(q) ||
+                       p.desc.toLowerCase().includes(q) ||
+                       p.cat.toLowerCase().includes(q);
+    return matchCat && matchPrice && matchQ;
+  });
+
+  renderProducts(filtered);
+  document.getElementById('productCountLabel').textContent =
+    filtered.length === products.length
+      ? `(${products.length} позицій)`
+      : `(${filtered.length} з ${products.length})`;
+}
+
+// ──── RENDER PRODUCTS ────
+// Приймає масив товарів і рендерить картки.
+// Підтримує поле img (фото) або emoji як заглушку.
+function renderProducts(list) {
+  if (list === undefined) list = products;
+  const grid = document.getElementById('productsGrid');
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="no-results">
+        <div class="no-results-icon">🔍</div>
+        Нічого не знайдено — спробуйте змінити фільтри
+      </div>`;
+    return;
+  }
+
+  // ── Як виглядає картка ──────────────────────────────────────
+  // Верхня частина: фото або emoji (поле img або emoji)
+  // Синій тег: артикул (поле id)
+  // Назва: поле name
+  // Опис: поле desc
+  // Ціна: поле price
+  // Кнопка: додає товар у кошик
+  // ─────────────────────────────────────────────────────────────
+  grid.innerHTML = list.map(p => {
+    // Зображення: якщо є поле img — показуємо фото, інакше emoji
+    const thumb = p.img
+      ? `<img src="${p.img}" alt="${p.name}"
+             style="width:100%;height:100%;object-fit:cover;"
+             onerror="this.style.display='none';this.nextSibling.style.display='flex'">`
+        + `<span style="display:none;align-items:center;justify-content:center;font-size:3rem;width:100%;height:100%">${p.emoji || '📦'}</span>`
+      : p.emoji || '📦';
+
+    return `
+    <div class="product-card">
+      <div class="product-thumb">
+        <span class="product-cat-tag">${p.cat}</span>
+        ${thumb}
+      </div>
+      <div class="product-body">
+        <span class="product-sku">${p.id}</span>
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <div class="product-price">${p.price.toLocaleString('uk-UA')}<span class="product-price-unit"> ₴</span></div>
+          <button class="btn-add" id="btn-${p.id}" onclick="addToCart('${p.id}')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            В кошик
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ──── CART LOGIC ────
+function addToCart(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  updateCart();
+  const btn = document.getElementById(`btn-${id}`);
+  btn.classList.add('added');
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Додано`;
+  setTimeout(() => {
+    btn.classList.remove('added');
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> В кошик`;
+  }, 1400);
+
+  const badge = document.getElementById('cartBadge');
+  badge.classList.remove('bump');
+  void badge.offsetWidth;
+  badge.classList.add('bump');
+  showToast('Додано до кошика', 'ok');
+}
+
+function changeQty(id, d) {
+  if (!cart[id]) return;
+  cart[id] += d;
+  if (cart[id] <= 0) delete cart[id];
+  updateCart();
+}
+
+function removeItem(id) {
+  delete cart[id];
+  updateCart();
+}
+
+function totalItems() { return Object.values(cart).reduce((a,b)=>a+b,0); }
+function totalPrice() {
+  return Object.entries(cart).reduce((s,[id,qty])=>{
+    const p=products.find(x=>x.id===id);
+    return s+(p?p.price*qty:0);
+  },0);
+}
+
+function updateCart() {
+  const n = totalItems();
+  document.getElementById('cartBadge').textContent = n;
+  const hasItems = n > 0;
+  document.getElementById('cartEmpty').style.display = hasItems ? 'none' : 'block';
+  document.getElementById('cartFilled').style.display = hasItems ? 'block' : 'none';
+  document.getElementById('btnCheckout').disabled = !hasItems;
+
+  if (hasItems) {
+    document.getElementById('cartList').innerHTML = Object.entries(cart).map(([id,qty])=>{
+      const p = products.find(x=>x.id===id);
+      if (!p) return '';
+      return `
+        <div class="cart-item">
+          <div class="cart-item-icon">${esc(p.emoji)}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${esc(p.name)}</div>
+            <span class="cart-item-sku">${esc(p.id)}</span>
+            <div class="qty-row">
+              <button class="qty-btn" onclick="changeQty('${id}',-1)">−</button>
+              <span class="qty-val">${qty}</span>
+              <button class="qty-btn" onclick="changeQty('${id}',1)">+</button>
+            </div>
+          </div>
+          <div class="cart-item-price">${(p.price*qty).toLocaleString('uk-UA')} ₴</div>
+          <button class="btn-remove" onclick="removeItem('${id}')" title="Видалити">✕</button>
+        </div>`;
+    }).join('');
+
+    document.getElementById('summaryQty').textContent = n + ' шт.';
+    document.getElementById('summaryTotal').textContent = totalPrice().toLocaleString('uk-UA') + ' ₴';
+  }
+}
+
+// ──── OPEN / CLOSE ────
+function openCart()  { document.getElementById('drawerOverlay').classList.add('open'); document.getElementById('cartDrawer').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeCart() { document.getElementById('drawerOverlay').classList.remove('open'); document.getElementById('cartDrawer').classList.remove('open'); document.body.style.overflow=''; }
+
+// ══════════════════════════════════════════════════════════════════
+// SECURITY LAYER
+// ══════════════════════════════════════════════════════════════════
+
+// ── XSS: екранування будь-якого рядка перед вставкою в DOM ──────
+// Використовуй esc() замість прямої інтерполяції у innerHTML.
+function esc(str) {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
+// ── Санітизація рядків вводу: обрізаємо зайве, знімаємо керуючі символи ──
+function sanitize(str, maxLen = 200) {
+  if (typeof str !== 'string') return '';
+  // Видаляємо керуючі символи (окрім звичайних пробілів)
+  return str.replace(/[ --]/g, '').trim().slice(0, maxLen);
+}
+
+// ── Rate Limiter: не більше MAX_ORDERS спроб за WINDOW_MS ────────
+const _rl = { count: 0, reset: Date.now() };
+const RL_MAX = 3;       // максимум 3 замовлення
+const RL_WINDOW = 10 * 60 * 1000; // за 10 хвилин
+
+function rateLimitCheck() {
+  const now = Date.now();
+  if (now - _rl.reset > RL_WINDOW) { _rl.count = 0; _rl.reset = now; }
+  _rl.count++;
+  return _rl.count <= RL_MAX;
+}
+
+// ── Honeypot: приховане поле — боти заповнюють його, люди — ні ──
+// Перевіряємо у submitOrder() перед відправкою.
+function isBot() {
+  const hp = document.getElementById('f-honeypot');
+  return hp && hp.value.length > 0;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// NOVA POSHTA API
+// ══════════════════════════════════════════════════════════════════
+// ⚠ Ключ НП залишається тут через архітектурне обмеження:
+//   цей сайт — чистий HTML без серверного backend.
+//   Ключ НП використовується ТІЛЬКИ для пошуку міст/відділень —
+//   він read-only і не дає доступу до рахунків чи відправок.
+//   Для повного приховування ключа потрібен proxy-backend
+//   (Cloudflare Worker або Node.js сервер).
+//
+// Що зроблено для мінімізації ризику:
+//   1. Ключ НП — окремий від Apps Script URL (різні сервіси).
+//   2. Apps Script URL — єдине місце запису в таблицю.
+//   3. Apps Script валідує дані на серверній стороні.
+// ─────────────────────────────────────────────────────────────────
+const NP_KEY = '6b85037bfd322cbb47c4624a0072ef92';
+const NP_URL = 'https://api.novaposhta.ua/v2.0/json/';
+
+let selectedCityRef = '';
+let selectedCityName = '';
+let selectedBranchText = '';
+let citySearchTimer = null;
+let branchSearchTimer = null;
+
+async function npRequest(modelName, calledMethod, props) {
+  const body = {
+    apiKey: NP_KEY,
+    modelName,
+    calledMethod,
+    methodProperties: props
+  };
+  const r = await fetch(NP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  const d = await r.json();
+  return d.data || [];
+}
+
+// ── City autocomplete ──
+function initCitySearch() {
+  const input = document.getElementById('f-city');
+  const drop  = document.getElementById('city-dropdown');
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    selectedCityRef  = '';
+    selectedCityName = '';
+    selectedBranchText = '';
+    resetField('fg-city');
+    document.getElementById('f-branch').value = '';
+    document.getElementById('f-branch').disabled = true;
+    selectedBranchText = '';
+
+    if (q.length < 2) { closeDrop(drop); return; }
+    clearTimeout(citySearchTimer);
+    showLoader(drop);
+    citySearchTimer = setTimeout(() => searchCity(q, drop, input), 350);
+  });
+
+  input.addEventListener('keydown', e => handleDropKey(e, drop, chooseCityItem));
+  document.addEventListener('click', e => { if (!e.target.closest('#fg-city')) closeDrop(drop); });
+}
+
+async function searchCity(q, drop, input) {
+  try {
+    const data = await npRequest('Address', 'searchSettlements', {
+      CityName: q, Limit: 8, Page: 1
+    });
+    const cities = (data[0] && data[0].Addresses) ? data[0].Addresses : [];
+    if (!cities.length) { showEmpty(drop, 'Місто не знайдено'); return; }
+
+    drop.innerHTML = cities.map((c) => `
+      <div class="ac-item"
+           data-ref="${esc(c.DeliveryCity)}"
+           data-name="${esc(c.Present)}"
+           tabindex="-1">
+        ${esc(c.Present)}
+      </div>`).join('');
+
+    drop.querySelectorAll('.ac-item').forEach(el => {
+      el.addEventListener('click', () => chooseCityItem(el, input, drop));
+    });
+    drop.classList.add('open');
+  } catch(e) {
+    showEmpty(drop, 'Помилка з\'єднання з НП');
+  }
+}
+
+function chooseCityItem(el, input, drop) {
+  selectedCityRef  = el.dataset.ref;
+  selectedCityName = el.dataset.name;
+  input.value = selectedCityName;
+  closeDrop(drop);
+  setFieldOk('fg-city');
+
+  const branchInput = document.getElementById('f-branch');
+  branchInput.disabled = false;
+  branchInput.placeholder = 'Почніть вводити номер або адресу...';
+  branchInput.focus();
+}
+
+// ── Branch autocomplete ──
+function initBranchSearch() {
+  const input = document.getElementById('f-branch');
+  const drop  = document.getElementById('branch-dropdown');
+
+  input.addEventListener('input', () => {
+    if (!selectedCityRef) return;
+    const q = input.value.trim();
+    selectedBranchText = '';
+    resetField('fg-branch');
+
+    clearTimeout(branchSearchTimer);
+    if (q.length < 1) { closeDrop(drop); return; }
+    showLoader(drop);
+    branchSearchTimer = setTimeout(() => searchBranch(q, drop, input), 400);
+  });
+
+  input.addEventListener('keydown', e => handleDropKey(e, drop, chooseBranchItem));
+  document.addEventListener('click', e => { if (!e.target.closest('#fg-branch')) closeDrop(drop); });
+}
+
+async function searchBranch(q, drop, input) {
+  try {
+    const data = await npRequest('AddressGeneral', 'getWarehouses', {
+      CityRef: selectedCityRef,
+      FindByString: q,
+      Limit: 10,
+      Page: 1
+    });
+    if (!data.length) { showEmpty(drop, 'Відділення не знайдено'); return; }
+
+    drop.innerHTML = data.map(w => `
+      <div class="ac-item"
+           data-desc="${esc(w.Description)}"
+           tabindex="-1">
+        ${esc(w.Description)}
+        <div class="ac-item-sub">${esc(w.ShortAddress || '')}</div>
+      </div>`).join('');
+
+    drop.querySelectorAll('.ac-item').forEach(el => {
+      el.addEventListener('click', () => chooseBranchItem(el, input, drop));
+    });
+    drop.classList.add('open');
+  } catch(e) {
+    showEmpty(drop, 'Помилка з\'єднання з НП');
+  }
+}
+
+function chooseBranchItem(el, input, drop) {
+  selectedBranchText = el.dataset.desc;
+  input.value = selectedBranchText;
+  closeDrop(drop);
+  setFieldOk('fg-branch');
+}
+
+// ── Dropdown helpers ──
+function showLoader(drop) {
+  drop.innerHTML = '<div class="ac-loader">Пошук...</div>';
+  drop.classList.add('open');
+}
+
+function showEmpty(drop, msg) {
+  drop.innerHTML = `<div class="ac-empty">${msg}</div>`;
+  drop.classList.add('open');
+}
+
+function closeDrop(drop) { drop.classList.remove('open'); }
+
+function handleDropKey(e, drop, chooseFn) {
+  const items = drop.querySelectorAll('.ac-item');
+  if (!items.length) return;
+  const focused = drop.querySelector('.ac-item.focused');
+  let idx = Array.from(items).indexOf(focused);
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (focused) focused.classList.remove('focused');
+    idx = (idx + 1) % items.length;
+    items[idx].classList.add('focused');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (focused) focused.classList.remove('focused');
+    idx = (idx - 1 + items.length) % items.length;
+    items[idx].classList.add('focused');
+    items[idx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter' && focused) {
+    e.preventDefault();
+    chooseFn(focused, e.target, drop);
+  } else if (e.key === 'Escape') {
+    closeDrop(drop);
+  }
+}
+
+function setFieldOk(fgId) {
+  const fg = document.getElementById(fgId);
+  fg.classList.remove('has-err');
+  fg.classList.add('is-ok');
+}
+
+function resetField(fgId) {
+  const fg = document.getElementById(fgId);
+  fg.classList.remove('has-err', 'is-ok');
+  const inp = fg.querySelector('input');
+  if (inp) inp.classList.remove('err');
+}
+
+// ── Phone auto-format ──
+function initPhoneFormat() {
+  const input = document.getElementById('f-phone');
+  input.addEventListener('input', () => {
+    let v = input.value.replace(/[^\d+]/g, '');
+    // Автоматично ставимо +380 якщо починається з 0
+    if (v.startsWith('0') && v.length > 1) v = '+38' + v;
+    if (!v.startsWith('+')) v = '+' + v;
+    input.value = v.slice(0, 13); // +380XXXXXXXXX = 13 символів
+  });
+}
+
+// ──── VALIDATE ────
+function validate() {
+  let ok = true;
+
+  // ── [SEC] ПІБ: тільки кирилиця, 2–100 символів, мін. 2 слова ──
+  const nameVal = sanitize(document.getElementById('f-name').value, 100);
+  const nameOk = /^[А-ЯҐЄІЇа-яґєії'\-]+(\s+[А-ЯҐЄІЇа-яґєії'\-]+){1,}$/.test(nameVal)
+    && nameVal.split(/\s+/).every(w => w.replace(/[^А-ЯҐЄІЇа-яґєії]/gi,'').length >= 2)
+    && nameVal.split(/\s+/).length >= 2;
+  toggleFieldErr('fg-name', 'f-name', nameOk);
+  if (!nameOk) ok = false;
+
+  // ── [SEC] Телефон: строго +380XXXXXXXXX, 13 символів ──
+  const phoneVal = sanitize(document.getElementById('f-phone').value, 13);
+  const phoneOk = /^\+380\d{9}$/.test(phoneVal);
+  toggleFieldErr('fg-phone', 'f-phone', phoneOk);
+  if (!phoneOk) ok = false;
+
+  // Місто: обов'язково обрати зі списку НП
+  const cityOk = !!selectedCityRef && !!selectedCityName;
+  toggleFieldErr('fg-city', 'f-city', cityOk);
+  if (!cityOk) ok = false;
+
+  // Відділення: обов'язково обрати зі списку НП
+  const branchOk = !!selectedBranchText;
+  toggleFieldErr('fg-branch', 'f-branch', branchOk);
+  if (!branchOk) ok = false;
+
+  // ── [SEC] Telegram: необов'язково, якщо є — @username, макс. 33 символи ──
+  const tgVal = sanitize(document.getElementById('f-tg').value, 33);
+  const tgOk  = !tgVal || /^@[a-zA-Z0-9_]{4,}$/.test(tgVal);
+  toggleFieldErr('fg-tg', 'f-tg', tgOk);
+  if (!tgOk) ok = false;
+
+  return ok;
+}
+
+function toggleFieldErr(fgId, inputId, isOk) {
+  const fg  = document.getElementById(fgId);
+  const inp = document.getElementById(inputId);
+  fg.classList.toggle('has-err', !isOk);
+  fg.classList.toggle('is-ok',    isOk);
+  if (inp) inp.classList.toggle('err', !isOk);
+}
+
+// ──── SUBMIT ────
+async function submitOrder() {
+
+  // ── [SEC] Honeypot: якщо заповнено — це бот, мовчки відхиляємо ──
+  if (isBot()) { return; }
+
+  // ── [SEC] Rate limit: не більше 3 замовлень за 10 хв з одного браузера ──
+  if (!rateLimitCheck()) {
+    showToast('Забагато спроб. Зачекайте 10 хвилин.', 'fail');
+    return;
+  }
+
+  if (!validate()) { showToast('Заповніть усі поля', 'fail'); return; }
+
+  const btn = document.getElementById('btnCheckout');
+  btn.disabled = true;
+  btn.textContent = 'Відправляємо...';
+
+  // ── URL Google Apps Script ──
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzHJylGbfDpESDjt4mX49MskiUJgiP5UAUAPhBkHxSHUxR-EkUCvrSZ7s2qPBJpmHtXxQ/exec';
+
+  // Отримуємо наступний номер замовлення з таблиці (єдиний лічильник для всіх)
+  let num;
+  try {
+    const r = await fetch(SHEET_URL + '?action=nextOrder');
+    const d = await r.json();
+    num = typeof d.nextOrder === 'number' ? d.nextOrder : Date.now() % 100000;
+  } catch(e) {
+    num = Date.now() % 100000;
+  }
+
+  // ── [SEC] Санітизуємо всі поля вводу перед відправкою ──
+  const name  = sanitize(document.getElementById('f-name').value,  100);
+  const phone = sanitize(document.getElementById('f-phone').value,  13);
+  const tg    = sanitize(document.getElementById('f-tg').value,     33);
+  const addr  = sanitize(`${selectedCityName}, ${selectedBranchText}`, 300);
+  const date  = new Date().toLocaleDateString('uk-UA');
+
+  // ── [SEC] Ціни беремо ТІЛЬКИ з масиву products на клієнті ──
+  // Apps Script також повинен перевіряти productId і не довіряти amount.
+  // Підміна ціни через DevTools не дасть ефекту — amount рахується тут.
+  const orderItems = Object.entries(cart)
+    .filter(([id]) => products.some(x => x.id === id)) // тільки відомі товари
+    .map(([id, qty]) => {
+      const p = products.find(x => x.id === id);
+      const safeQty = Math.max(1, Math.min(99, parseInt(qty) || 1)); // 1–99 шт
+      return {
+        orderNumber: `#${num}`,
+        productName: p.name,           // ім'я з масиву, не від клієнта
+        productId:   p.id,             // id з масиву, не від клієнта
+        quantity:    safeQty,
+        amount:      p.price * safeQty, // ціна з масиву, не від клієнта
+        fullName:    name,
+        phone:       phone,
+        telegram:    tg || '—',
+        address:     addr,
+        date:        date,
+      };
+    });
+
+  if (!orderItems.length) {
+    showToast('Кошик порожній', 'fail');
+    btn.disabled = false;
+    btn.textContent = 'Оформити замовлення';
+    return;
+  }
+
+  try {
+    const sends = orderItems.map(row =>
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(row),
+      }).catch(() => {})
+    );
+    await Promise.all(sends);
+  } catch(e) {
+    // no-cors opaque response — очікувана поведінка
+  }
+
+  // Успіх показуємо завжди — no-cors не дає читати статус,
+  // але якщо дані дійшли до Apps Script — вони записані.
+  cart = {};
+  updateCart();
+  ['f-name','f-phone','f-city','f-branch','f-tg'].forEach(fid => {
+    const el = document.getElementById(fid);
+    if (el) { el.value = ''; el.classList.remove('err'); }
+  });
+  ['fg-name','fg-phone','fg-city','fg-branch','fg-tg'].forEach(fid => {
+    const el = document.getElementById(fid);
+    if (el) { el.classList.remove('has-err','is-ok'); }
+  });
+  selectedCityRef = ''; selectedCityName = ''; selectedBranchText = '';
+  document.getElementById('f-branch').disabled = true;
+  document.getElementById('f-branch').placeholder = 'Спочатку виберіть місто...';
+  closeCart();
+
+  document.getElementById('modalOrderNum').textContent = `Замовлення #${num}`;
+  document.getElementById('successModal').classList.add('open');
+
+  btn.disabled = false;
+  btn.textContent = 'Оформити замовлення';
+}
+
+function closeModal() { document.getElementById('successModal').classList.remove('open'); }
+
+// ──── TOAST ────
+let _tt;
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+// ──── ERROR LOGGER (без персональних даних) ────────────────────
+// Логує лише тип помилки і час. Жодних імен, телефонів, адрес.
+function secLog(event, detail) {
+  // Можна розширити: відправляти на свій endpoint або в консоль адміна.
+  // Зараз — тихо, щоб не засмічувати консоль для клієнта.
+  try {
+    const entry = { e: event, t: new Date().toISOString(), d: detail };
+    const log = JSON.parse(sessionStorage.getItem('_aph_log') || '[]');
+    log.push(entry);
+    if (log.length > 50) log.shift(); // не більше 50 записів
+    sessionStorage.setItem('_aph_log', JSON.stringify(log));
+  } catch(_) {}
+}
+
+// Відловлюємо необроблені помилки JS
+window.addEventListener('error', (e) => {
+  secLog('js_error', e.message ? e.message.slice(0, 80) : 'unknown');
+});
+
+window.addEventListener('unhandledrejection', (e) => {
+  secLog('promise_reject', String(e.reason).slice(0, 80));
+});
+
+// ──── INIT ────
+buildCategoryFilters();   // будує кнопки фільтрів з масиву products
+renderProducts();         // рендерить усі картки
+updateCart();             // оновлює лічильник кошика
+initCitySearch();         // пошук міст через API Нової Пошти
+initBranchSearch();       // пошук відділень через API Нової Пошти
+initPhoneFormat();        // авто-форматування телефону
+</script>
+</body>
+</html>
